@@ -5,12 +5,6 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
-const multipart = require('connect-multiparty');
-
-const multiPartMiddleware = multipart({
-    uploadDir: './public/images-avatar'
-});
-
 
 const app = express();
 const port = 9706;

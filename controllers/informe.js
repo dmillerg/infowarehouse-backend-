@@ -2,16 +2,16 @@ const conexion = require("../database/database");
 const bcrypt = require("bcrypt");
 const { json } = require("body-parser");
 
-function getRespuesta(req, res) {
-  var id_post = req.params.id_post;
-  var query = ``;
-  if (id_post > -1) {
-    query += ` WHERE id_post=${id_post} `;
-  }
-  query += `ORDER BY fecha DESC`;
+function getInforme(req, res) {
+  // var id_post = req.params.id_post;
+  // var query = ``;
+  // if (id_post > -1) {
+  //   query += ` WHERE id_post=${id_post} `;
+  // }
+  // query += `ORDER BY fecha DESC`;
 
   conexion.query(
-    `SELECT * FROM respuesta ` + query,
+    `SELECT * FROM informe `,
     function (error, results, fields) {
       if (error) {
         console.log(error);
@@ -20,13 +20,13 @@ function getRespuesta(req, res) {
       if (results.length > 0) {
         return res.status(200).json(results);
       } else {
-        return res.status(200).send({ documents: "no hay respuestas" });
+        return res.status(200).send({ documents: "no hay informes" });
       }
     }
   );
 }
 
-function saveRespuesta(req, res) {
+function saveinforme(req, res) {
   conexion.query(
     `SELECT * FROM tokens WHERE token='${req.body.token}'`,
     function (err, result) {

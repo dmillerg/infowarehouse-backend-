@@ -2,16 +2,16 @@ const conexion = require("../database/database");
 const bcrypt = require("bcrypt");
 const { json } = require("body-parser");
 
-function getPosts(req, res) {
-  var id_producto = req.params.id_producto;
-  var query = ``;
-  if (id_producto > -1) {
-    query += ` WHERE id_producto=${id_producto} `;
-  }
-  query += `ORDER BY fecha DESC`;
+function getFactura(req, res) {
+  // var id_post = req.params.id_post;
+  // var query = ``;
+  // if (id_post > -1) {
+  //   query += ` WHERE id_post=${id_post} `;
+  // }
+  // query += `ORDER BY fecha DESC`;
 
   conexion.query(
-    `SELECT * FROM posts ` + query,
+    `SELECT * FROM factura `,
     function (error, results, fields) {
       if (error) {
         console.log(error);
@@ -20,13 +20,13 @@ function getPosts(req, res) {
       if (results.length > 0) {
         return res.status(200).json(results);
       } else {
-        return res.status(200).send({ documents: "no hay posts" });
+        return res.status(200).send({ documents: "no hay factura" });
       }
     }
   );
 }
 
-function savePosts(req, res) {
+function saveinforme(req, res) {
   conexion.query(
     `SELECT * FROM tokens WHERE token='${req.body.token}'`,
     function (err, result) {
@@ -35,20 +35,17 @@ function savePosts(req, res) {
       }
       if (result.length > 0) {
         var id = -1;
-        var alias = req.body.alias;
-        var correo = req.body.correo;
-        var comentario = req.body.comentario;
+        var respuesta = req.body.respuesta;
         var fecha = new Date();
-        var id_producto = req.body.id_producto;
-        console.log('so', id_producto);
+        var id_post = req.body.id_post;
         conexion.query(
-          `INSERT INTO posts(id, alias, correo, comentario, fecha, id_producto) VALUES (NULL,"${alias}", "${correo}", "${comentario}", "${fecha}", "${id_producto}")`,
+          `INSERT INTO respuesta(id, respuesta, fecha, id_post) VALUES (NULL,"${respuesta}", "${fecha}", "${id_post}")`,
           function (error, results, fields) {
             if (error) return res.status(500).send({ message: error });
             if (results) {
               return res
                 .status(201)
-                .send({ message: "posts guardado correctamente" });
+                .send({ message: "respuesta guardada correctamente" });
             }
           }
         );
@@ -57,7 +54,7 @@ function savePosts(req, res) {
   );
 }
 
-function deletePosts(req, res) {
+function deleteRespuesta(req, res) {
   conexion.query(
     `SELECT * FROM tokens WHERE token='${req.query.token}'`,
     function (err, result) {
@@ -67,12 +64,12 @@ function deletePosts(req, res) {
       if (result.length > 0) {
         const id = req.params.id;
         conexion.query(
-          `SELECT * FROM posts WHERE id=${id}`,
+          `SELECT * FROM respuesta WHERE id=${id}`,
           function (err, result) {
             if (err) return res.status(500).send({ message: err });
             if (result) {
               conexion.query(
-                `DELETE FROM posts WHERE id = ${id}`,
+                `DELETE FROM respuesta WHERE id = ${id}`,
                 function (error, results, fields) {
                   if (error) return error;
                   if (results) {
@@ -138,21 +135,7 @@ function deletePosts(req, res) {
 //   });
 // }
 
-function searchRespuestas(req, res) {
-  let idpost = req.params.idpost;
-  conexion.query(`SELECT * FROM respuesta WHERE id_post=${idpost}`, function(error, result, field){
-    if(error){
-      return res.status(500).send({message: error});
-    }
-    if(result){
-      return res.status(200).send(result);
-    }
-  })
-}
-
 module.exports = {
-  getPosts,
-  savePosts,
-  deletePosts,
-  searchRespuestas,
+  getFactura,
+  deleteRespuesta,
 };

@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 const host = 'localhost';
-const database = 'icem';
+const database = 'infowarehouse';
 const user = 'root';
 const password = '';
 
