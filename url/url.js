@@ -28,10 +28,12 @@ api.get('/loadSQL', managedb_controller.loadSQL);
 
 // Rutas para login and logout
 api.post('/login', login_controller.login);
-api.post('/logout/:id', login_controller.logout);
+api.post('/logout', login_controller.logout);
 
 //Rutas para Facturas
 api.get('/facturas', factura_controller.getFactura);
+api.post('/facturas', factura_controller.saveFactura);
+api.delete('/facturas/:codigo', factura_controller.deleteFactura);
 
 // Exportamos la configuración
 module.exports = api;
