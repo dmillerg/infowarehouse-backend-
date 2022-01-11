@@ -9,6 +9,7 @@ var factura_controller = require('../controllers/factura');
 
 var managedb_controller = require('../database/manageDB');
 var login_controller = require('../controllers/login');
+var producto_controller = require('../controllers/producto');
 // var superuser_controller = require('../database/superuser');
 
 // Llamamos al router
@@ -34,6 +35,12 @@ api.post('/logout', login_controller.logout);
 api.get('/facturas', factura_controller.getFactura);
 api.post('/facturas', factura_controller.saveFactura);
 api.delete('/facturas/:codigo', factura_controller.deleteFactura);
+
+// Rutas para productos
+api.get('/productos', producto_controller.getProductos);
+api.post('/productos', producto_controller.saveProductos);
+api.delete('/productos/:id', producto_controller.deleteProducto);
+api.get('/productos/:id', producto_controller.updateProducto);
 
 // Exportamos la configuración
 module.exports = api;
