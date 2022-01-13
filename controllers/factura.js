@@ -38,8 +38,14 @@ function saveFactura(req, res) {
         var empresa = req.body.empresa;
         var fecha = new Date();
         var codigo = req.body.codigo;
+        var factura = req.body.no_factura;
+        var entregado = req.body.entregado_por;
+        var facturado = req.body.facturado_por;
+        var importe = req.body.importe;
+        var almacen = req.body.almacen;
+        var entidad = req.body.entidad_suministradora;
         conexion.query(
-          `INSERT INTO factura(empresa, fecha, codigo) VALUES ("${empresa}", "${fecha}", "${codigo}")`,
+          `INSERT INTO factura(empresa, fecha, codigo, no_factura, entregado_por, facturado_por, entidad_suministradora, almacen, importe) VALUES ("${empresa}", "${fecha}", "${codigo}", "${factura}", "${entregado}", "${facturado}", "${entidad}", "${almacen}", ${importe})`,
           function (error, results, fields) {
             if (error) return res.status(500).send({ message: error });
             if (results) {
