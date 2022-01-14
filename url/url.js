@@ -10,6 +10,9 @@ var factura_controller = require('../controllers/factura');
 var managedb_controller = require('../database/manageDB');
 var login_controller = require('../controllers/login');
 var producto_controller = require('../controllers/producto');
+var tarjeta_estiba_controller = require('../controllers/tarjeta_estiba');
+var historial_tarjeta_estiba_controller = require('../controllers/historial_tarjeta_estiba');
+var informe_recepcion_controller = require('../controllers/informe');
 // var superuser_controller = require('../database/superuser');
 
 // Llamamos al router
@@ -41,6 +44,23 @@ api.get('/productos', producto_controller.getProductos);
 api.post('/productos', producto_controller.saveProductos);
 api.delete('/productos/:id', producto_controller.deleteProducto);
 api.get('/productos/:id', producto_controller.updateProducto);
+
+// Rutas para tarjetas estibas
+api.get('/tarjetas',tarjeta_estiba_controller.getTarjetas);
+api.post('/tarjetas',tarjeta_estiba_controller.saveTarjetaEstiba);
+api.delete('/tarjetas',tarjeta_estiba_controller.deleteTarjetaEstiba);
+api.get('/tarjetas/:codigo',tarjeta_estiba_controller.getTarjetaEstibaByCodigo);
+
+// Rutas para historial de tarjetas estiba
+api.get('/historialtarjeta/:codigo', historial_tarjeta_estiba_controller.getHistorialTarjetaEstiba);
+api.post('/historialtarjeta', historial_tarjeta_estiba_controller.saveHistorialTarjetaEstiba);
+api.delete('/historialtarjeta/:id', historial_tarjeta_estiba_controller.deleteHistorialTarjetaEstiba);
+api.get('/historialtarjeta/:id', historial_tarjeta_estiba_controller.getTarjetaEstibaByCodigo);
+
+// Rutas para informes
+api.get('/informe',informe_recepcion_controller.getInforme)
+api.get('/informe/:anno',informe_recepcion_controller.getInformeByYear)
+api.post('/informe',informe_recepcion_controller.saveinforme)
 
 // Exportamos la configuración
 module.exports = api;
