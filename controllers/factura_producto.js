@@ -1,17 +1,10 @@
 const conexion = require("../database/database");
 const bcrypt = require("bcrypt");
 const { json } = require("body-parser");
-const { format } = require("../database/database");
 
-function getInforme(req, res) {
-  // var id_post = req.params.id_post;
-  // var query = ``;
-  // if (id_post > -1) {
-  //   query += ` WHERE id_post=${id_post} `;
-  // }
-  // query += `ORDER BY fecha DESC`;
+function getFacturaProducto(req, res) {
   conexion.query(
-    `SELECT * FROM informe_recepcion`,
+    `SELECT * FROM factura_producto WHERE no_factura=${req.params.no}`,
     function (error, results, fields) {
       if (error) {
         console.log(error);
@@ -20,28 +13,13 @@ function getInforme(req, res) {
       if (results.length > 0) {
         return res.status(200).json(results);
       } else {
-        return res.status(200).send({ documents: "no hay informes" });
+        return res.status(200).send({ documents: "no hay producto para esa factura" });
       }
     }
   );
 }
 
-function getInformeByYear(req, res) {
-  conexion.query(
-    `SELECT * FROM informe_recepcion WHERE anno=${req.params.anno}`,
-    function (error, results, fields) {
-      if (error) {
-        console.log(error);
-        return res.status(500).send(error);
-      }
-      if (results) {
-        return res.status(200).json(results);
-      } 
-    }
-  );
-}
-
-function saveinforme(req, res) {
+function saveFacturaProducto(req, res) {
   conexion.query(
     `SELECT * FROM tokens WHERE token='${req.body.token}'`,
     function (err, result) {
@@ -49,22 +27,17 @@ function saveinforme(req, res) {
         return res.status(405).send({ message: "usuario no autenticado" });
       }
       if (result.length > 0) {
-        var no = req.body.no;
-        var empresa = req.body.empresa;
-        var almacen = req.body.almacen;
-        var codigo = req.body.codigo;
-        var fecha = new Date();
-        var recepcionado_por = req.body.recepcionado_por;
-        var entidad_suministradora = req.body.entidad_suministradora;
-        var factura = req.body.factura;
+        var no_factura = req.body.no_factura;
+        var codigo_producto = req.body.codigo_producto;
+        var cantidad = req.body.cantidad;
         conexion.query(
-          `INSERT INTO informe_recepcion(no, empresa, almacen, codigo, fecha, recepcionado_por, entidad_suministradora, factura) VALUES ("${no}", "${empresa}", "${almacen}", "${codigo}", "${fecha}", "${recepcionado_por}", "${entidad_suministradora}", "${factura}")`,
+          `INSERT INTO factura_producto(id, no_factura, codigo_producto, cantidad) VALUES (NULL, "${no_factura}", "${codigo_producto}", "${cantidad}")`,
           function (error, results, fields) {
             if (error) return res.status(500).send({ message: error });
             if (results) {
               return res
                 .status(201)
-                .send({ message: "informe guardado correctamente" });
+                .send({ message: "producto guardado dentro de la factura " });
             }
           }
         );
@@ -73,35 +46,35 @@ function saveinforme(req, res) {
   );
 }
 
-function deleteRespuesta(req, res) {
-  conexion.query(
-    `SELECT * FROM tokens WHERE token='${req.query.token}'`,
-    function (err, result) {
-      if (err) {
-        return res.status(405).send({ message: "usuario no autenticado" });
-      }
-      if (result.length > 0) {
-        const id = req.params.id;
-        conexion.query(
-          `SELECT * FROM respuesta WHERE id=${id}`,
-          function (err, result) {
-            if (err) return res.status(500).send({ message: err });
-            if (result) {
-              conexion.query(
-                `DELETE FROM respuesta WHERE id = ${id}`,
-                function (error, results, fields) {
-                  if (error) return error;
-                  if (results) {
-                    return res.status(200).send({ results });
-                  }
-                }
-              );
-            }
+function deleteFactura(req, res) {
+  // conexion.query(
+  //   `SELECT * FROM tokens WHERE token='${req.query.token}'`,
+  //   function (err, result) {
+  //     if (err) {
+  //       return res.status(405).send({ message: "usuario no autenticado" });
+  //     }
+  //     if (result.length > 0) {
+  const codigo = req.params.codigo;
+  let query = `SELECT * FROM factura WHERE codigo="${codigo}"`;
+  console.log(query);
+  conexion.query(query, function (err, result) {
+    if (err) return res.status(500).send({ message: err });
+    if (result) {
+      conexion.query(
+        `DELETE FROM factura WHERE codigo = "${codigo}"`,
+        function (error, results, fields) {
+          if (error) return error;
+          if (results) {
+            return res.status(200).send({ results });
           }
-        );
-      }
+        }
+      );
     }
+  }
   );
+  // }
+  //   }
+  // );
 }
 
 // function updateCategoria(req, res) {
@@ -155,8 +128,7 @@ function deleteRespuesta(req, res) {
 // }
 
 module.exports = {
-  getInforme,
-  saveinforme,
-  deleteRespuesta,
-  getInformeByYear,
+  getFacturaProducto,
+  deleteFactura,
+  saveFacturaProducto,
 };

@@ -13,6 +13,7 @@ var producto_controller = require('../controllers/producto');
 var tarjeta_estiba_controller = require('../controllers/tarjeta_estiba');
 var historial_tarjeta_estiba_controller = require('../controllers/historial_tarjeta_estiba');
 var informe_recepcion_controller = require('../controllers/informe');
+var factura_producto_controller = require('../controllers/factura_producto');
 // var superuser_controller = require('../database/superuser');
 
 // Llamamos al router
@@ -61,6 +62,10 @@ api.get('/historialtarjeta/:id', historial_tarjeta_estiba_controller.getTarjetaE
 api.get('/informe',informe_recepcion_controller.getInforme)
 api.get('/informe/:anno',informe_recepcion_controller.getInformeByYear)
 api.post('/informe',informe_recepcion_controller.saveinforme)
+
+// Rutas para factura producto
+api.get('/facturaproducto/:no',factura_producto_controller.getFacturaProducto)
+api.post('/facturaproducto',factura_producto_controller.saveFacturaProducto)
 
 // Exportamos la configuración
 module.exports = api;
