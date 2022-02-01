@@ -58,7 +58,7 @@ function saveinforme(req, res) {
         var entidad_suministradora = req.body.entidad_suministradora;
         var factura = req.body.factura;
         conexion.query(
-          `INSERT INTO informe_recepcion(no, empresa, almacen, codigo, fecha, recepcionado_por, entidad_suministradora, factura) VALUES ("${no}", "${empresa}", "${almacen}", "${codigo}", "${fecha}", "${recepcionado_por}", "${entidad_suministradora}", "${factura}")`,
+          `INSERT INTO informe_recepcion(no, empresa, almacen, codigo, fecha, recepcionado_por, entidad_suministradora, factura, anno) VALUES ("${no}", "${empresa}", "${almacen}", "${codigo}", "${fecha}", "${recepcionado_por}", "${entidad_suministradora}", "${factura}", "${new Date().getFullYear()}")`,
           function (error, results, fields) {
             if (error) return res.status(500).send({ message: error });
             if (results) {

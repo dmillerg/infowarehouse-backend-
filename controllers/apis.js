@@ -161,7 +161,7 @@ function getApis(req, res) {
   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-laptop" viewBox="0 0 16 16">
   <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5h11zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2h-11zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5z"/>
 </svg>
-  <h1>Bienvenido al servidor de APis del ICEM</h1>
+  <h1>Bienvenido al servidor de APis de la CTC</h1>
   <p>Solo no se pueden probar desde aqui las api de tipo POST, que esta en desarrollo</p>
     <div id="lista" class="lista" name="lista" style="overflow-y: scroll;height: 350px">
         ${item}
