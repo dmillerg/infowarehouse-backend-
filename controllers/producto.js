@@ -26,21 +26,33 @@ function saveProductos(req, res) {
         return res.status(405).send({ message: "usuario no autenticado" });
       }
       if (result.length > 0) {
-        var id = -1;
-        var nombre = req.body.nombre;
-        var precio = req.body.precio;
-        var precio_unitario = req.body.codigo;
-        conexion.query(
-          `INSERT INTO producto(id, nombre, precio, precio_unitario) VALUES (NULL, "${nombre}", "${precio}", "${precio_unitario}")`,
-          function (error, results, fields) {
-            if (error) return res.status(500).send({ message: error });
-            if (results) {
-              return res
-                .status(201)
-                .send({ message: "Producto guardado correctamente" });
-            }
+        var codigo = req.body.codigo;
+        conexion.query(`SELECT * FROM producto WHERE codigo="${codigo}"`, function (errorr, resultt) {
+          if (errorr) {
+            return res.status(500).send({ message: errorr });
           }
-        );
+          if (resultt.length > 0) {
+            return res
+              .status(201)
+              .send({ message: "Producto ya existente" });
+          } else {
+            var nombre = req.body.nombre;
+            var descripcion = req.body.descripcion;
+            var precio = req.body.precio;
+            var precio_unitario = req.body.precio_unitario;
+            conexion.query(
+              `INSERT INTO producto(codigo, nombre, descripcion, precio, precio_unitario) VALUES ("${codigo}", "${nombre}", "${descripcion}", "${precio}", "${precio_unitario}")`,
+              function (error, results, fields) {
+                if (error) return res.status(500).send({ message: error });
+                if (results) {
+                  return res
+                    .status(201)
+                    .send({ message: "Producto guardado correctamente" });
+                }
+              }
+            );
+          }
+        })
       }
     }
   );

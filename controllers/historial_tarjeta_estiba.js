@@ -28,26 +28,45 @@ function saveHistorialTarjetaEstiba(req, res) {
         return res.status(405).send({ message: "usuario no autenticado" });
       }
       if (result.length > 0) {
-        var id = -1;
         var fecha = req.body.fecha;
         var clave = req.body.clave;
         var no = req.body.no;
         var entrada = req.body.entrada;
         var salida = req.body.salida;
-        var saldo = req.body.saldo;
+        var saldo = 0;
         var firma = req.body.firma;
         var codigo_estiba = req.body.codigo_estiba;
-        conexion.query(
-          `INSERT INTO historial_tarjeta_estiba(id, fecha, clave, no, entrada, salida, saldo, firma, codigo_estiba) VALUES (NULL, "${fecha}", "${clave}", "${no}", "${entrada}", "${salida}", "${saldo}", "${firma}", "${codigo_estiba}")`,
-          function (error, results, fields) {
-            if (error) return res.status(500).send({ message: error });
-            if (results) {
-              return res
-                .status(201)
-                .send({ message: "historial de tarjeta estiba guardado correctamente" });
-            }
+        console.log(req.body);
+        conexion.query(`SELECT * FROM historial_tarjeta_estiba WHERE codigo_estiba="${codigo_estiba}"`, function (errorr, resultt) {
+          if (errorr) return res.status(500).send({ message: errorr });
+          if (resultt.length > 0) {
+            saldo = parseInt(resultt[resultt.length - 1].saldo) + parseInt(entrada != '-' ? entrada : 0) - parseInt(salida != '-' ? salida : 0);
+            conexion.query(
+              `INSERT INTO historial_tarjeta_estiba( fecha, clave, no, entrada, salida, saldo, firma, codigo_estiba) VALUES ("${fecha}", "${clave}", "${no}", "${entrada}", "${salida}", "${saldo}", "${firma}", "${codigo_estiba}")`,
+              function (error, results, fields) {
+                if (error) return res.status(500).send({ message: error });
+                if (results) {
+                  return res
+                    .status(201)
+                    .send({ message: "historial de tarjeta estiba guardado correctamente" });
+                }
+              }
+            );
+          } else {
+            saldo = entrada;
+            conexion.query(
+              `INSERT INTO historial_tarjeta_estiba( fecha, clave, no, entrada, salida, saldo, firma, codigo_estiba) VALUES ("${fecha}", "${clave}", "${no}", "${entrada}", "${salida}", "${saldo}", "${firma}", "${codigo_estiba}")`,
+              function (error, results, fields) {
+                if (error) return res.status(500).send({ message: error });
+                if (results) {
+                  return res
+                    .status(201)
+                    .send({ message: "historial de tarjeta estiba guardado correctamente" });
+                }
+              }
+            );
           }
-        );
+        });
       }
     }
   );

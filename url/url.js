@@ -62,6 +62,7 @@ api.get('/historialtarjeta/:id', historial_tarjeta_estiba_controller.getTarjetaE
 api.get('/informe',informe_recepcion_controller.getInforme)
 api.get('/informe/:anno',informe_recepcion_controller.getInformeByYear)
 api.post('/informe',informe_recepcion_controller.saveinforme)
+api.get('/informelastnumber',informe_recepcion_controller.getLastNumber)
 
 // Rutas para factura producto
 api.get('/facturaproducto/:no',factura_producto_controller.getFacturaProducto)

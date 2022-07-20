@@ -33,22 +33,30 @@ function saveTarjetaEstiba(req, res) {
         return res.status(405).send({ message: "usuario no autenticado" });
       }
       if (result.length > 0) {
-        var id = -1;
         var codigo = req.body.codigo;
-        var producto_generico = req.body.producto_generico;
-        var producto_especifico = req.body.producto_especifico;
-        var precio_unitario = req.body.precio_unitario;
-        conexion.query(
-          `INSERT INTO tarjeta_estiba(codigo, producto_generico, producto_especifico, precio_unitario) VALUES ("${codigo}", "${producto_generico}", "${producto_especifico}", "${precio_unitario}")`,
-          function (error, results, fields) {
-            if (error) return res.status(500).send({ message: error });
-            if (results) {
-              return res
-                .status(201)
-                .send({ message: "tarjeta estiba guardada correctamente" });
-            }
+        conexion.query(`SELECT * FROM tarjeta_estiba WHERE codigo="${codigo}"`, function (errorr, resultt) {
+          if (errorr) return res.status(500).send({ message: errorr });
+          if (resultt.length > 0) {
+            return res
+              .status(201)
+              .send({ message: "tarjeta estiba existente" });
+          } else {
+            var producto_generico = req.body.producto_generico;
+            var producto_especifico = req.body.producto_especifico;
+            var precio_unitario = req.body.precio_unitario;
+            conexion.query(
+              `INSERT INTO tarjeta_estiba(codigo, producto_generico, producto_especifico, precio_unitario) VALUES ("${codigo}", "${producto_generico}", "${producto_especifico}", "${precio_unitario}")`,
+              function (error, results, fields) {
+                if (error) return res.status(500).send({ message: error });
+                if (results) {
+                  return res
+                    .status(201)
+                    .send({ message: "tarjeta estiba guardada correctamente" });
+                }
+              }
+            );
           }
-        );
+        });
       }
     }
   );

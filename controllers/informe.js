@@ -35,7 +35,7 @@ function getInformeByYear(req, res) {
       }
       if (results) {
         return res.status(200).json(results);
-      } 
+      }
     }
   );
 }
@@ -55,9 +55,11 @@ function saveinforme(req, res) {
         var fecha = new Date();
         var recepcionado_por = req.body.recepcionado_por;
         var entidad_suministradora = req.body.entidad_suministradora;
+        var anno = req.body.anno;
+        var no_anno = req.body.no_anno;
         var factura = req.body.factura;
         conexion.query(
-          `INSERT INTO informe_recepcion(no, empresa, almacen, codigo, fecha, recepcionado_por, entidad_suministradora, factura, anno) VALUES ("${no}", "${empresa}", "${almacen}", "${codigo}", "${fecha}", "${recepcionado_por}", "${entidad_suministradora}", "${factura}", "${new Date().getFullYear()}")`,
+          `INSERT INTO informe_recepcion(no, empresa, almacen, codigo, fecha, recepcionado_por, entidad_suministradora, factura, anno, no_anno) VALUES ("${no}", "${empresa}", "${almacen}", "${codigo}", "${fecha}", "${recepcionado_por}", "${entidad_suministradora}", "${factura}", "${anno}", "${no_anno}")`,
           function (error, results, fields) {
             if (error) return res.status(500).send({ message: error });
             if (results) {
@@ -72,90 +74,22 @@ function saveinforme(req, res) {
   );
 }
 
-function deleteRespuesta(req, res) {
-  conexion.query(
-    `SELECT * FROM tokens WHERE token='${req.query.token}'`,
-    function (err, result) {
-      if (err) {
-        return res.status(405).send({ message: "usuario no autenticado" });
-      }
-      if (result.length > 0) {
-        const id = req.params.id;
-        conexion.query(
-          `SELECT * FROM respuesta WHERE id=${id}`,
-          function (err, result) {
-            if (err) return res.status(500).send({ message: err });
-            if (result) {
-              conexion.query(
-                `DELETE FROM respuesta WHERE id = ${id}`,
-                function (error, results, fields) {
-                  if (error) return error;
-                  if (results) {
-                    return res.status(200).send({ results });
-                  }
-                }
-              );
-            }
-          }
-        );
-      }
+function getLastNumber(req, res) {
+  const year = new Date().getFullYear();
+  let query = `SELECT * FROM informe_recepcion WHERE anno>=${year} ORDER BY no DESC`;
+  conexion.query(query, function (error, result) {
+    if (error) {
+      return res.status(500).send({ message: error });
     }
-  );
+    if (result) {
+      return res.status(200).send(result);
+    }
+  })
 }
-
-// function updateCategoria(req, res) {
-//   conexion.query(
-//     `SELECT * FROM tokens WHERE token='${req.body.token}'`,
-//     function (err, result) {
-//       if (err) {
-//         return res.status(405).send({ message: "usuario no autenticado" });
-//       }
-//       if (result.length > 0) {
-//         // Recogemos un parámetro por la url
-//         var id = req.params.id;
-
-//         // Recogemos los datos que nos llegen en el body de la petición
-//         var update = req.body;
-//         var nombre = update.nombre;
-
-//         // Buscamos por id y actualizamos el objeto y devolvemos el objeto actualizado
-//         var query = `UPDATE categorias SET nombre="${nombre}"`;
-//         query += `WHERE id = ${id}`;
-
-//         conexion.query(query, function (error, results, fields) {
-//           if (error)
-//             return res.status(500).send({ message: "error en el servidor" });
-//           if (results) {
-//             return res
-//               .status(201)
-//               .send({ message: "actualizado correctamente" });
-//           } else {
-//             return res
-//               .status(404)
-//               .send({ message: "no existe ninguna categoria con ese id" });
-//           }
-//         });
-//       }
-//     }
-//   );
-// }
-
-// function getCategoriaById(req, res) {
-//   let id = req.params.id;
-//   let query = `SELECT * FROM categorias WHERE id=${id}`;
-//   conexion.query(query, function (err, result) {
-//     if (err) return res.status(500).send({ message: err });
-//     if (result) {
-//       return res
-//         .status(200)
-//         .send({ id: result[0].id, nombre: result[0].nombre });
-//     }
-//   });
-// }
 
 module.exports = {
   getInforme,
   saveinforme,
-  deleteRespuesta,
   getInformeByYear,
+  getLastNumber,
 };
