@@ -65,7 +65,7 @@ api.post('/informe',informe_recepcion_controller.saveinforme)
 api.get('/informelastnumber',informe_recepcion_controller.getLastNumber)
 
 // Rutas para factura producto
-api.get('/facturaproducto/:no',factura_producto_controller.getFacturaProducto)
+api.get('/facturaproducto',factura_producto_controller.getFacturaProducto)
 api.post('/facturaproducto',factura_producto_controller.saveFacturaProducto)
 
 // Exportamos la configuración

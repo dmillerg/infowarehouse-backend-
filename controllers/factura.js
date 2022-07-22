@@ -140,6 +140,8 @@ function deleteFactura(req, res) {
 //   });
 // }
 
+
+
 module.exports = {
   getFactura,
   deleteFactura,

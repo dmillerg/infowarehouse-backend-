@@ -1,21 +1,18 @@
 const conexion = require("../database/database");
 const { json } = require("body-parser");
 
-function getFacturaProducto(req, res) {
-  conexion.query(
-    `SELECT * FROM factura_producto WHERE no_factura=${req.params.no}`,
-    function (error, results, fields) {
-      if (error) {
-        console.log(error);
-        return res.status(500).send(error);
-      }
-      if (results.length > 0) {
-        return res.status(200).json(results);
-      } else {
-        return res.status(200).send({ documents: "no hay producto para esa factura" });
-      }
-    }
-  );
+function getFacturaProducto(req, res){
+  let no_factura = req.query.no_factura;
+  let query = `SELECT producto.*, factura_producto.cantidad FROM factura_producto INNER JOIN producto ON factura_producto.codigo_producto = producto.codigo WHERE factura_producto.no_factura="${no_factura}"`;
+  console.log(query);
+  conexion.query(query, function(error, result){
+   if(error){
+     return res.status(500).send({message: error});
+   }
+   if(result){
+     return res.status(200).send(result);
+   }
+  })
 }
 
 function saveFacturaProducto(req, res) {
